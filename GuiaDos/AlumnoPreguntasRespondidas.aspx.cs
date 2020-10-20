@@ -12,7 +12,6 @@ namespace GuiaDos
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // hola ora ves
             if (Session["CU"] == null || Session["passwdAl"] == null || Session["cProf"]!=null) 
             {//Si alguna de las variables de sesion es null,
                 Session.Clear(); //<-- borra todas las variables de sesion
