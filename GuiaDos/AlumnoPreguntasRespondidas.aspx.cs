@@ -45,19 +45,33 @@ namespace GuiaDos
                 //Ligar la configuracion al radiobuttonlist
                 DropDownList1.DataBind();
             }
-            
+            Profcon.Close();
 
+
+            String Prof2Query = " select distinct Profesor.cProf, Profesor.nombre from Profesor ";
+            OdbcConnection Prof2Con = new ConexionBD().conexion;
+            OdbcCommand Prof2Comando = new OdbcCommand(Prof2Query, Prof2Con);
+            OdbcDataReader Prof2Lector = Prof2Comando.ExecuteReader();
+            if (DropDownList2.Items.Count == 0)
+            {
+                DropDownList2.DataSource = Prof2Lector;
+                DropDownList2.DataTextField = "nombre";
+                DropDownList2.DataValueField = "cProf";
+                DropDownList2.DataBind();
+            }
+
+            Prof2Con.Close();
            
         }
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            Session["cPreguntaProf"] = DropDownList1.SelectedValue;
+            //Session["cPreguntaProf"] = DropDownList1.SelectedValue;
             String PreguntasQuery = "select Pregunta.cPreg, Pregunta.contenido, Alumno.CU from Pregunta inner join Alumno on Alumno.CU=Pregunta.CU inner join Profesor on Pregunta.cProf=Profesor.cProf where Alumno.CU=?  and Profesor.cProf = ? and Pregunta.cPreg   in (select Respuesta.cPreg from Respuesta)";
             OdbcConnection PreguntasCon = new ConexionBD().conexion;
             OdbcCommand PreguntasComando = new OdbcCommand(PreguntasQuery, PreguntasCon);
             PreguntasComando.Parameters.AddWithValue("CU", Session["CU"].ToString());
-            PreguntasComando.Parameters.AddWithValue("cProf", Session["cPreguntaProf"].ToString());
+            PreguntasComando.Parameters.AddWithValue("cProf", DropDownList1.SelectedValue.ToString());
             OdbcDataReader PreguntasLector = PreguntasComando.ExecuteReader();
             if (RadioButtonList1.Items.Count == 0)
             {
@@ -65,14 +79,15 @@ namespace GuiaDos
                 RadioButtonList1.DataTextField = "contenido";
                 RadioButtonList1.DataValueField = "cPreg";
                 RadioButtonList1.DataBind();
-            
+                PreguntasCon.Close();
             }
+            
 
             String NoPreguntasQurery = "select Pregunta.cPreg, Pregunta.contenido, Alumno.CU from Pregunta inner join Alumno on Alumno.CU=Pregunta.CU inner join Profesor on Pregunta.cProf=Profesor.cProf where Alumno.CU=?  and Profesor.cProf = ? and Pregunta.cPreg  not in (select Respuesta.cPreg from Respuesta)";
             OdbcConnection NoPreguntasCon = new ConexionBD().conexion;
             OdbcCommand  NoPreguntasComando = new OdbcCommand(NoPreguntasQurery, NoPreguntasCon);
             NoPreguntasComando.Parameters.AddWithValue("CU", Session["CU"]);
-            NoPreguntasComando.Parameters.AddWithValue("cProf", Session["cPreguntaProf"]);
+            NoPreguntasComando.Parameters.AddWithValue("cProf", DropDownList1.SelectedValue.ToString());
             OdbcDataReader NoPreguntasLector = NoPreguntasComando.ExecuteReader();
             if (ListBox1.Items.Count == 0)
             {
@@ -80,14 +95,17 @@ namespace GuiaDos
                 ListBox1.DataTextField = "contenido";
                 ListBox1.DataValueField = "cPreg";
                 ListBox1.DataBind();
+                NoPreguntasCon.Close();
             }
 
-         
+            
+
+            
 
 
-            {
 
-            }
+            
+
         }
 
         protected void RadioButtonList1_SelectedIndexChanged(object sender, EventArgs e)
@@ -109,7 +127,40 @@ namespace GuiaDos
             {
                 Session["cRespuesta"] = RespuestaLector.GetInt32(0);
                 Label2.Text = RespuestaLector.GetString(1);
+                RespuestaLector.Close();
             }
+            
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            Random rnd = new Random();
+            int key = rnd.Next(10000000);
+            String contenido = TextBox1.Text;
+            String fecha = DateTime.Now.ToString("yyyy-MM-dd");
+            String HacerPreguntaQuery = " insert into pregunta values(?, ?, ?, ?, ?) "; 
+            OdbcConnection HacerPreguntaCon = new ConexionBD().conexion;
+            OdbcCommand HacerPreguntaComando = new OdbcCommand(HacerPreguntaQuery, HacerPreguntaCon);
+            HacerPreguntaComando.Parameters.AddWithValue("cPreg", key);
+            HacerPreguntaComando.Parameters.AddWithValue("contenido", contenido);
+            HacerPreguntaComando.Parameters.AddWithValue("fecha", fecha);
+            HacerPreguntaComando.Parameters.AddWithValue("CU", Session["CU"].ToString());
+            HacerPreguntaComando.Parameters.AddWithValue("cProf", DropDownList2.SelectedValue);
+
+
+            HacerPreguntaComando.ExecuteNonQuery();
+
+            HacerPreguntaCon.Close();
+            Response.Redirect("AlumnoPreguntasRespondidas.aspx");
+            
+
+        }
+
+        protected void Button4_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Session.Abandon();
+            Response.Redirect("login.aspx");
         }
     }
 }

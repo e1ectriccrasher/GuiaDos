@@ -12,7 +12,7 @@ namespace GuiaDos
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+           
 
         }
 
@@ -33,7 +33,7 @@ namespace GuiaDos
             Alumnocomando.Parameters.AddWithValue("CU", CU);
             Alumnocomando.Parameters.AddWithValue("passwd", passwd);
             OdbcDataReader Alumnolector = Alumnocomando.ExecuteReader();
-
+            
 
 
             if (Alumnolector.HasRows == true)
@@ -46,16 +46,17 @@ namespace GuiaDos
                                                 
                                                 
                 Session["CU"] = s;
-                Session["passwdAl"] = s;
+                Session["passwdAl"] = d;
                 Session.Timeout = 15;
                 Response.Redirect("AlumnoPreguntasRespondidas.aspx");
-
+                
             }
             
             else
             {//No puso bien sus credenciales, no lo dejamos pasar
                 Label1.Text = "Credenciales incorrectas";
             }
+            conLoginAlumno.Close();
         }
 
         protected void Button2_Click(object sender, EventArgs e)
@@ -74,7 +75,7 @@ namespace GuiaDos
             ProfesorComando.Parameters.AddWithValue("passwd", passwd);
             OdbcDataReader ProfesorLector = ProfesorComando.ExecuteReader();
 
-            if (ProfesorLector.HasRows)
+            if (ProfesorLector.HasRows== true)
             {
                 Label1.Text = "Credenciales correctas";
 
@@ -86,6 +87,8 @@ namespace GuiaDos
                 Session["cProf"] = c;
                 Session["paswdProf"] = v;
                 Session.Timeout = 15;
+
+                Response.Redirect("ProfesorPreguntasResponder.aspx");
             }
             else
             {//No puso bien sus credenciales, no lo dejamos pasar

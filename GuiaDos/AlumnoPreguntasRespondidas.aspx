@@ -32,6 +32,17 @@
         <br />
         Preguntas sin contestar<br />
         <asp:ListBox ID="ListBox1" runat="server"></asp:ListBox>
+        <br />
+        <br />
+        hacer pregunta al profesor
+        <br />
+        <asp:DropDownList ID="DropDownList2" runat="server">
+        </asp:DropDownList>
+        <br />
+        <asp:TextBox ID="TextBox1" runat="server" Height="268px" TextMode="MultiLine" Width="582px"></asp:TextBox>
+        <asp:Button ID="Button3" runat="server" OnClick="Button3_Click" Text="Enviar" />
+        <br />
+        <asp:Button ID="Button4" runat="server" OnClick="Button4_Click" Text="Cerrar Sesión" />
     </form>
 </body>
 </html>

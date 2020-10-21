@@ -70,6 +70,7 @@
     <Content Include="AlumnoPreguntasRespondidas.aspx" />
     <Content Include="Global.asax" />
     <Content Include="login.aspx" />
+    <Content Include="ProfesorPreguntasResponder.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +91,13 @@
     </Compile>
     <Compile Include="login.aspx.designer.cs">
       <DependentUpon>login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProfesorPreguntasResponder.aspx.cs">
+      <DependentUpon>ProfesorPreguntasResponder.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProfesorPreguntasResponder.aspx.designer.cs">
+      <DependentUpon>ProfesorPreguntasResponder.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
